@@ -8,10 +8,26 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 let app = new Vue({
   el: '#app',
+  created() {
+    this.paused = false
+    this.animationSkipped = false
+  },
   render: h => h(App)
 })
 
 let styleTagEl = document.getElementById('style-tag')
-app.$on('msg', (text) => {
-  styleTagEl.textContent += text
+app.$on('styleAppend', (styleText) => {
+  styleTagEl.textContent += styleText
+})
+
+app.$on('styleOverwrite', (styleText) => {
+  styleTagEl.textContent = styleText
+})
+
+app.$on('togglePause', function (state) {
+  this.paused = state === 1
+})
+
+app.$on('skip', function () {
+  this.animationSkipped = true
 })

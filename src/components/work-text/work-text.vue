@@ -9,7 +9,6 @@
 
 <script>
   import { writeMixin } from 'common/js/mixin'
-  // import { replaceURLs } from 'common/js/util'
   import Promise from 'bluebird'
   import workText from './work.txt'
   import Markdown from 'markdown'
@@ -24,16 +23,12 @@
       return {
         flipped: false,
         preview: true,
-        show: false
+        show: false,
+        workText: workText,
+        mdText: toHTML(workText)
       }
     },
     computed: {
-      workText() {
-        return this.text
-      },
-      mdText() {
-        return toHTML(this.text)
-      },
       workCls() {
         return this.flipped ? 'flipped' : ''
       }
@@ -44,6 +39,7 @@
         await this.writeTo(this.$el, workText, 0, this.speed, false, 1)
       },
       showWorkBox() {
+        this.show = true
         this.preview = false
         this.flipped = true
         this.$nextTick(() => {

@@ -19,6 +19,9 @@ export const writeMixin = {
   },
   methods: {
     async writeTo(el, message, index, interval, mirrorToStyle, charsPerInterval) {
+      if (this.$root.animationSkipped) {
+        throw new Error('SKIP IT')
+      }
       let chars = message.slice(index, index + charsPerInterval)
       index += charsPerInterval
 
@@ -46,7 +49,7 @@ export const writeMixin = {
 
         do {
           await Promise.delay(thisInterval)
-        } while (false)
+        } while (this.$root.paused)
 
         return this.writeTo(el, message, index, interval, mirrorToStyle, charsPerInterval)
       }
@@ -55,7 +58,7 @@ export const writeMixin = {
       this.text = handleChar(this.text, char)
       this.styleBuffer += char
       if (char === ';') {
-        this.$root.$emit('msg', this.styleBuffer)
+        this.$root.$emit('styleAppend', this.styleBuffer)
         this.styleBuffer = ''
       }
     },
